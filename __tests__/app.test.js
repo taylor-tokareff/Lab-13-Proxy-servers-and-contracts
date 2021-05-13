@@ -1,19 +1,10 @@
 import app from '../lib/app.js';
 import supertest from 'supertest';
-import client from '../lib/client.js';
-import { execSync } from 'child_process';
+
 
 const request = supertest(app);
 
 describe('API Routes', () => {
-
-  beforeAll(() => {
-    execSync('npm run setup-db');
-  });
-
-  afterAll(async () => {
-    return client.end();
-  });
 
   const expectedCats = [
     {

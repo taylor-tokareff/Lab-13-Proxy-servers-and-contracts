@@ -9,17 +9,7 @@
     "start:watch": "nodemon server.js",
     "lint": "eslint .",
     "test": "node --experimental-vm-modules ./node_modules/.bin/jest --verbose --runInBand",
-    "test:watch": "npm run test -- --watch",
-    "create-tables": "node data/create-tables.js",
-    "drop-tables": "node data/drop-tables.js",
-    "load-seed-data": "node data/load-seed-data.js",
-    "recreate-tables": "npm run drop-tables && npm run create-tables",
-    "setup-db": "npm run recreate-tables && npm run load-seed-data",
-    "setup-db:prod": "heroku run npm run setup-db",
-    "setup-heroku": "npm run create-heroku-db && npm run create-heroku-db -- --as DEV_DATABASE && heroku config:set PGSSLMODE=require && npm run get-dev-db-url",
-    "create-heroku-db": "heroku addons:create heroku-postgresql:hobby-dev",
-    "get-dev-db-url": "heroku config:get DEV_DATABASE_URL",
-    "get-prod-db-url": "heroku config:get DATABASE_URL"
+    "test:watch": "npm run test -- --watch"
   },
   "keywords": [],
   "author": "",
