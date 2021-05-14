@@ -1,107 +1,63 @@
 import app from '../lib/app.js';
 import supertest from 'supertest';
+import { formatLocation } from '../lib/munge-utils.js';
 
 
 const request = supertest(app);
 
 describe('API Routes', () => {
 
-  const expectedCats = [
-    {
-      id: expect.any(Number),
-      name: 'Felix',
-      type: 'Tuxedo',
-      url: 'cats/felix.png',
-      year: 1892,
-      lives: 3,
-      isSidekick: false
-    },
-    {
-      id: expect.any(Number),
-      name: 'Garfield',
-      type: 'Orange Tabby',
-      url: 'cats/garfield.jpeg',
-      year: 1978,
-      lives: 7,
-      isSidekick: false
-    },
-    {
-      id: expect.any(Number),
-      name: 'Duchess',
-      type: 'Angora',
-      url: 'cats/duchess.jpeg',
-      year: 1970,
-      lives: 9,
-      isSidekick: false
-    },
-    {
-      id: expect.any(Number),
-      name: 'Stimpy',
-      type: 'Manx',
-      url: 'cats/stimpy.jpeg',
-      year: 1990,
-      lives: 1,
-      isSidekick: true
-    },
-    {
-      id: expect.any(Number),
-      name: 'Sylvester',
-      type: 'Tuxedo',
-      url: 'cats/sylvester.jpeg',
-      year: 1945,
-      lives: 1,
-      isSidekick: true
-    },
-    {
-      id: expect.any(Number),
-      name: 'Tigger',
-      type: 'Orange Tabby',
-      url: 'cats/tigger.jpeg',
-      year: 1928,
-      lives: 8,
-      isSidekick: false
-    },
-    {
-      id: expect.any(Number),
-      name: 'Hello Kitty',
-      type: 'Angora',
-      url: 'cats/hello-kitty.jpeg',
-      year: 1974,
-      lives: 9,
-      isSidekick: false
-    },
-    {
-      id: expect.any(Number),
-      name: 'Hobbs',
-      type: 'Orange Tabby',
-      url: 'cats/hobbs.jpeg',
-      year: 1985,
-      lives: 6,
-      isSidekick: true
-    }
-  ];
 
-  // If a GET request is made to /api/cats, does:
-  // 1) the server respond with status of 200
-  // 2) the body match the expected API data?
-  it('GET /api/cats', async () => {
-    // act - make the request
-    const response = await request.get('/api/cats');
-
-    // was response OK (200)?
-    expect(response.status).toBe(200);
-
-    // did it return the data we expected?
-    expect(response.body).toEqual(expectedCats);
-
-  });
 
   // If a GET request is made to /api/cats/:id, does:
   // 1) the server respond with status of 200
   // 2) the body match the expected API data for the cat with that id?
-  test('GET /api/cats/:id', async () => {
-    const response = await request.get('/api/cats/2');
-    expect(response.status).toBe(200);
-    expect(response.body).toEqual(expectedCats[1]);
+  test('testing a function', async () => {
+    const beforemungelocation = [{
+      'place_id': '236915565',
+      'licence': 'https://locationiq.com/attribution',
+      'osm_type': 'relation',
+      'osm_id': '8765812',
+      'boundingbox': [
+        '40.292635',
+        '40.314148',
+        '-78.902275',
+        '-78.860483'
+      ],
+      'lat': '40.303234',
+      'lon': '-78.8873661206627',
+      'display_name': 'Oakland, Milo Lane, Richland Township, Cambria County, Pennsylvania, 15902, USA',
+      'class': 'boundary',
+      'type': 'census',
+      'importance': 0.389701883147039
+    },
+    {
+      'place_id': '209778864',
+      'licence': 'https://locationiq.com/attribution',
+      'osm_type': 'way',
+      'osm_id': '591010998',
+      'boundingbox': [
+        '14.7253785',
+        '14.7256598',
+        '121.0103075',
+        '121.0106066'
+      ],
+      'lat': '14.7253873',
+      'lon': '121.0103381',
+      'display_name': 'Oakland, Whispering Palms Subdivision, Llano, Zone 15, Caybiga, District 1, Caloocan, Metro Manila, 1420, Philippines',
+      'class': 'highway',
+      'type': 'residential',
+      'importance': 0.2
+    }];
+
+    const expectation =
+    {
+      'formatted_query': 'Oakland, Milo Lane, Richland Township, Cambria County, Pennsylvania, 15902, USA',
+      'latitude': '40.303234',
+      'longitude': '-78.8873661206627'
+    };
+
+    const result = formatLocation(beforemungelocation);
+    expect(result).toEqual(expectation);
   });
 });
