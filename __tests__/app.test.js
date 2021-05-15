@@ -1,9 +1,9 @@
 import app from '../lib/app.js';
 import supertest from 'supertest';
-import { formatLocation } from '../lib/munge-utils.js';
+import { formatLocation, formatWeather } from '../lib/munge-utils.js';
 
 
-const request = supertest(app);
+supertest(app);
 
 describe('API Routes', () => {
 
@@ -12,7 +12,7 @@ describe('API Routes', () => {
   // If a GET request is made to /api/cats/:id, does:
   // 1) the server respond with status of 200
   // 2) the body match the expected API data for the cat with that id?
-  test('testing a function', async () => {
+  test('testing location', async () => {
     const beforemungelocation = [{
       'place_id': '236915565',
       'licence': 'https://locationiq.com/attribution',
@@ -60,4 +60,65 @@ describe('API Routes', () => {
     const result = formatLocation(beforemungelocation);
     expect(result).toEqual(expectation);
   });
+
+
+  test('testing weather', async () => {
+    const beforeMungeWeather = {
+      'data': [
+        {
+          'moonrise_ts': 1620993099,
+          'wind_cdir': 'WSW',
+          'rh': 54,
+          'pres': 1006.38,
+          'high_temp': 21.1,
+          'sunset_ts': 1621037834,
+          'ozone': 372.083,
+          'moon_phase': 0.0979064,
+          'wind_gust_spd': 3.29883,
+          'snow_depth': 0,
+          'clouds': 16,
+          'ts': 1620964860,
+          'sunrise_ts': 1620986640,
+          'app_min_temp': 3.6,
+          'wind_spd': 1.21827,
+          'pop': 0,
+          'wind_cdir_full': 'west-southwest',
+          'slp': 1024.04,
+          'moon_phase_lunation': 0.11,
+          'valid_date': '2021-05-14',
+          'app_max_temp': 20.1,
+          'vis': 24.096,
+          'dewpt': 5.1,
+          'snow': 0,
+          'uv': 8.20151,
+          'weather': {
+            'icon': 'c02d',
+            'code': 801,
+            'description': 'Few clouds'
+          },
+          'wind_dir': 250,
+          'max_dhi': null,
+          'clouds_hi': 0,
+          'precip': 0,
+          'low_temp': 9.7,
+          'max_temp': 21.2,
+          'moonset_ts': 1621048301,
+          'datetime': '2021-05-14',
+          'temp': 14.8,
+          'min_temp': 6.4,
+          'clouds_mid': 9,
+          'clouds_low': 16
+        }]
+    };
+
+    const expectation =
+      [{ 'forecast': 'Few clouds', 'time': '2021-05-14' }];
+
+    const result = formatWeather(beforeMungeWeather);
+    expect(result).toEqual(expectation);
+  });
+
+
+
+
 });
