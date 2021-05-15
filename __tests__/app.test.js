@@ -1,6 +1,6 @@
 import app from '../lib/app.js';
 import supertest from 'supertest';
-import { formatLocation, formatWeather } from '../lib/munge-utils.js';
+import { formatLocation, formatWeather, formatYelp } from '../lib/munge-utils.js';
 
 
 supertest(app);
@@ -115,6 +115,72 @@ describe('API Routes', () => {
       [{ 'forecast': 'Few clouds', 'time': '2021-05-14' }];
 
     const result = formatWeather(beforeMungeWeather);
+    expect(result).toEqual(expectation);
+  });
+
+
+  test('testing yelp', async () => {
+    const beforeMungeYelp = {
+      'businesses': [
+        {
+          'id': '6I28wDuMBR5WLMqfKxaoeg',
+          'alias': 'pike-place-chowder-seattle',
+          'name': 'Pike Place Chowder',
+          'image_url': 'https://s3-media1.fl.yelpcdn.com/bphoto/ZyQjV-wJQ2GHyX7l3jfbyg/o.jpg',
+          'is_closed': false,
+          'url': 'https://www.yelp.com/biz/pike-place-chowder-seattle?adjust_creative=4UZVPZN3m4Vc_sqOD0X-pw&utm_campaign=yelp_api_v3&utm_medium=api_v3_business_search&utm_source=4UZVPZN3m4Vc_sqOD0X-pw',
+          'review_count': 7497,
+          'categories': [
+            {
+              'alias': 'seafood',
+              'title': 'Seafood'
+            },
+            {
+              'alias': 'soup',
+              'title': 'Soup'
+            }
+          ],
+          'rating': 4.5,
+          'coordinates': {
+            'latitude': 47.60939,
+            'longitude': -122.34112
+          },
+          'transactions': [
+            'pickup',
+            'delivery'
+          ],
+          'price': '$$',
+          'location': {
+            'address1': '1530 Post Aly',
+            'address2': 'Ste 11',
+            'address3': '',
+            'city': 'Seattle',
+            'zip_code': '98101',
+            'country': 'US',
+            'state': 'WA',
+            'display_address': [
+              '1530 Post Aly',
+              'Ste 11',
+              'Seattle, WA 98101'
+            ]
+          },
+          'phone': '+12062672537',
+          'display_phone': '(206) 267-2537',
+          'distance': 765.1497312570257
+        }]
+    };
+
+
+    const expectation =
+      [{
+        'image_url': 'https://s3-media1.fl.yelpcdn.com/bphoto/ZyQjV-wJQ2GHyX7l3jfbyg/o.jpg',
+        'name': 'Pike Place Chowder',
+        'price': '$$',
+        'rating': 4.5,
+        'url': 'https://www.yelp.com/biz/pike-place-chowder-seattle?adjust_creative=4UZVPZN3m4Vc_sqOD0X-pw&utm_campaign=yelp_api_v3&utm_medium=api_v3_business_search&utm_source=4UZVPZN3m4Vc_sqOD0X-pw',
+      }];
+
+    const result = formatYelp(beforeMungeYelp);
     expect(result).toEqual(expectation);
   });
 
